@@ -31,8 +31,12 @@ typedef unsigned long long ull;
 typedef long double ld;
 
 /*
-	codeforce 1157A
-
+	使用优先队列的贪心
+	贪心：为了使放置有tokens的段最多，那么每段上就放置一个
+    将所有的段根据以下标准排序：
+        1、首先是根据段的左端开始排序；将最左的放在前面
+        2、如果左边相等，那么根据右边排序，将右边小的放在前面；
+    让后从左往又找
 */
 
 ll const maxn = 2000005;
