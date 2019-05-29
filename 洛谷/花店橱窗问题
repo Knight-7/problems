@@ -1,1 +1,90 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+	ios::sync_with_stdio(false); \
+	cin.tie(0);                  \
+	cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+
+*/
+
+ll const maxn = 2000005;
+int dp[101][101],a[101][101];
+int inf=999999999;
+
+void print(int x,int y)
+{
+    if(x>0)
+    {
+        int n=x;
+        while(dp[n][x]!=y)
+        {
+            n++;
+        }
+        print(x-1,y-a[x][n]);
+        printf("%d ",n);
+    }
+}
+
+int main()
+{
+    //freopen("text.txt", "r", stdin);
+    int f=0,v=0;
+    scanf("%d %d",&f,&v);
+    for(int i=1;i<=f;i++)
+    {
+        for(int j=1;j<=v;j++)
+        {
+            scanf("%d",&a[i][j]);
+            dp[j][i]=-inf;//dp[i][j]表示第i个瓶子放j朵花的最大美学值
+        }
+    }
+    for(int i=1;i<=v;i++)
+    {
+        dp[0][i]=-inf;
+    }
+    dp[0][0]=0;
+    for(int i=1;i<=v;i++)
+    {
+        for(int j=1;j<=min(f,i);j++)
+        {
+            dp[i][j]=max(dp[i-1][j],dp[i-1][j-1]+a[j][i]);
+            //dp[i-1][j]表示在这个瓶子中不放花，那么它的美学值等于前面i-1个瓶子放j朵花的美学值
+            //dp[i-1][j-1]表示将话放在这个瓶子上，那么的它的美学值就等于前i-1瓶子放j-1朵花的最大美学值加上该朵花放在这个瓶子中的美学值
+        }
+    }
+    printf("%d\n",dp[v][f]);
+    print(f,dp[v][f]);
+    return 0;
+}
+
+
+
+
 
