@@ -1,0 +1,85 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+	ios::sync_with_stdio(false); \
+	cin.tie(0);                  \
+	cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+
+*/
+#define inf 10000
+ll const maxn = 2000005;
+//递推方程 dp[i][j] = max(dp[i][j], dp[i][k] + dp[k + 1][j] + sum[i.j];
+int n;
+int dp1[250][250], dp2[250][250];
+int a[250], sum[250];
+int getnum(int i, int j)
+{
+    return sum[j] - sum[i - 1];
+}
+
+int main()
+{
+    //freopen("text.txt", "r", stdin);
+    cin >> n;
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> a[i];
+        a[n + i] = a[i];
+    }
+    for (int i = 1; i <= 2 * n; i++)
+        sum[i] = sum[i - 1] + a[i];
+    mt(dp1, 0);
+    int maxx = 0, minn = inf;
+    for (int p = 1; p < n; p++)
+    {
+        for (int i = 1, j = i + p; (i < 2 * n) && (j < 2 * n); i++, j = i + p)
+        {
+            dp2[i][j] = inf;
+            for (int k = i; k < j; k++)
+            {
+                dp1[i][j] = max(dp1[i][j], dp1[i][k] + dp1[k + 1][j] + getnum(i, j));
+                dp2[i][j] = min(dp2[i][j], dp2[i][k] + dp2[k + 1][j] + getnum(i, j));
+            }
+        }
+    }
+    for (int i = 1; i < n; i++)
+    {
+        maxx = max(maxx, dp1[i][i + n - 1]);
+        minn = min(minn, dp2[i][i + n - 1]);
+    }
+    printf("%d\n%d", minn, maxx);
+    return 0;
+}
+
+
+
+
+
+
