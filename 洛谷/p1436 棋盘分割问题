@@ -1,0 +1,171 @@
+/*  
+ 普通dp
+*/
+
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+	ios::sync_with_stdio(false); \
+	cin.tie(0);                  \
+	cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+#define inf 0x3f3f3f3f
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+
+*/
+#define mod 1000000007
+ll const maxn = 2000005;
+int n;
+int a[9][9];
+ll dp[16][10][10][10][10];
+ll sum[9][9];
+
+ll getsum(int x1, int y1, int x2, int y2)
+{
+	int num = sum[x2][y2] - sum[x1 - 1][y2] - sum[x2][y1 - 1] + sum[x1 - 1][y1 - 1];
+	return num;
+}
+
+int main()
+{
+	//freopen("text.txt", "r", stdin);
+	scanf("%d", &n);
+	for (int i = 1; i <= 8; i++)
+		for (int j = 1; j <= 8; j++)
+		{
+			scanf("%d", &a[i][j]);
+			sum[i][j] = sum[i][j - 1] + sum[i - 1][j] - sum[i - 1][j - 1] + a[i][j];
+		}
+	for (int i = 1; i <= 8; i++)
+		for (int j = 1; j <= 8; j++)
+			for (int x = i; x <= 8; x++)
+				for (int y = j; y <= 8; y++)
+				{ 
+					dp[0][i][j][x][y] += getsum(i, j, x, y);
+					dp[0][i][j][x][y] *= dp[0][i][j][x][y];
+				}
+	for (int i = 1; i < n; i++)
+		for (int x1 = 1; x1 <= 8; x1++)
+			for (int y1 = 1; y1 <= 8; y1++)
+				for (int x2 = x1; x2 <= 8; x2++)
+					for (int y2 = y1; y2 <= 8; y2++)
+					{
+						dp[i][x1][y1][x2][y2] = inf;
+						for (int k = y1; k < y2; k++)
+						{
+							dp[i][x1][y1][x2][y2] = min(dp[i][x1][y1][x2][y2], dp[i - 1][x1][y1][x2][k] + dp[0][x1][k + 1][x2][y2]);
+							dp[i][x1][y1][x2][y2] = min(dp[i][x1][y1][x2][y2], dp[i - 1][x1][k + 1][x2][y2] + dp[0][x1][y1][x2][k]);
+						}
+						for (int k = x1; k < x2; k++)
+						{
+							dp[i][x1][y1][x2][y2] = min(dp[i][x1][y1][x2][y2], dp[i - 1][x1][y1][k][y2] + dp[0][k + 1][y1][x2][y2]);
+							dp[i][x1][y1][x2][y2] = min(dp[i][x1][y1][x2][y2], dp[i - 1][k + 1][y1][x2][y2] + dp[0][x1][y1][k][y2]);
+						}
+					}
+	printf("%lld\n", dp[n - 1][1][1][8][8]);
+	return 0;
+}
+
+
+
+/**
+ * 普通动归,记忆化搜索写法
+ */
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int INF = 0x3f3f3f3f;
+
+int dp[16][10][10][10][10];
+int s[10][10];
+
+void dfs(int k, int x1,int y1, int x2, int y2){
+	int &ans = dp[k][x1][y1][x2][y2];
+
+	if(ans<INF){
+		return;
+	}
+
+	for (int y = y1 + 1; y < y2; y++) {
+		dfs(k - 1, x1, y1, x2, y);
+		dfs(k - 1, x1, y, x2, y2);
+		ans = min(ans, dp[k-1][x1][y1][x2][y] + dp[1][x1][y][x2][y2]);
+		ans = min(ans, dp[k-1][x1][y][x2][y2] + dp[1][x1][y1][x2][y]);
+	}
+
+	for (int x = x1 + 1; x < x2; x++) {
+		dfs(k - 1, x1, y1, x, y2);
+		dfs(k - 1, x, y1, x2, y2);
+		ans = min(ans, dp[k-1][x1][y1][x][y2] + dp[1][x][y1][x2][y2]);
+		ans = min(ans,  dp[1][x1][y1][x][y2] + dp[k-1][x][y1][x2][y2]);
+	}
+
+	if(ans == INF){
+		//这样处理是为了防止本来就没有答案的后面还要继续求解
+		//因为前面通过ans<INF来判断是否求过
+		ans = INF - 1;
+	}
+}
+
+void solve(){
+	int n,x1,y1,x2,y2,i,j;
+	int xx;
+
+	scanf("%d",&n);
+	for(i=1;i<=8;i++){
+		for(j=1;j<=8;j++){
+			scanf("%d",&xx);
+			s[i][j]=s[i-1][j]+s[i][j-1]-s[i-1][j-1]+xx;
+		}
+	}
+
+	memset(dp,0x3f,sizeof(dp));
+	for(x1=0;x1<8;x1++){
+		for(y1=0;y1<8;y1++){
+			for(x2=x1+1;x2<9;x2++){
+				for(y2=y1+1;y2<9;y2++){
+					xx = s[x2][y2]-s[x1][y2]-s[x2][y1]+s[x1][y1];
+					dp[1][x1][y1][x2][y2]=xx * xx;
+				}
+			}
+		}
+	}
+
+	dfs(n,0,0,8,8);
+	printf("%d\n", dp[n][0][0][8][8]);
+
+}
+
+int main(){
+	solve();
+	return 0;
+}
+
