@@ -30,7 +30,6 @@ using namespace std;
 #define rson rt << 1 | 1
 #define fi first
 #define se second
-#define inf 0x3f3f3f3f
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double ld;
@@ -38,13 +37,14 @@ typedef long double ld;
 /*
 
 */
-#define mod 1000000007
+const ll mod = 1000000007;
+const int inf = 0x3f3f3f3f;
 ll const maxn = 2000005;
 int n;
 int a[9][9];
 ll dp[16][10][10][10][10];
 ll sum[9][9];
-
+//求x1, y1, x2, y2区域的和
 ll getsum(int x1, int y1, int x2, int y2)
 {
 	int num = sum[x2][y2] - sum[x1 - 1][y2] - sum[x2][y1 - 1] + sum[x1 - 1][y1 - 1];
@@ -59,8 +59,9 @@ int main()
 		for (int j = 1; j <= 8; j++)
 		{
 			scanf("%d", &a[i][j]);
-			sum[i][j] = sum[i][j - 1] + sum[i - 1][j] - sum[i - 1][j - 1] + a[i][j];
+			sum[i][j] = sum[i][j - 1] + sum[i - 1][j] - sum[i - 1][j - 1] + a[i][j];//求前缀和
 		}
+	//初始化各个区域的和
 	for (int i = 1; i <= 8; i++)
 		for (int j = 1; j <= 8; j++)
 			for (int x = i; x <= 8; x++)
@@ -69,6 +70,7 @@ int main()
 					dp[0][i][j][x][y] += getsum(i, j, x, y);
 					dp[0][i][j][x][y] *= dp[0][i][j][x][y];
 				}
+	//dp，分别求出横着切和纵着切的最小值
 	for (int i = 1; i < n; i++)
 		for (int x1 = 1; x1 <= 8; x1++)
 			for (int y1 = 1; y1 <= 8; y1++)
@@ -87,9 +89,15 @@ int main()
 							dp[i][x1][y1][x2][y2] = min(dp[i][x1][y1][x2][y2], dp[i - 1][k + 1][y1][x2][y2] + dp[0][x1][y1][k][y2]);
 						}
 					}
+
 	printf("%lld\n", dp[n - 1][1][1][8][8]);
 	return 0;
 }
+
+
+
+
+
 
 
 
