@@ -115,6 +115,8 @@ const int INF = 0x3f3f3f3f;
 int dp[16][10][10][10][10];
 int s[10][10];
 
+//记忆化搜索中，每一个状态就记忆一次，之后就不用在改了
+
 void dfs(int k, int x1,int y1, int x2, int y2){
 	int &ans = dp[k][x1][y1][x2][y2];
 
