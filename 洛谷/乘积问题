@@ -1,0 +1,36 @@
+read = lambda : map(int, input().split())
+
+
+def getnum(s, i, j):
+    res = 0
+    t = 1
+    for x in range(j, i - 1, -1):
+        temp = int(s[x])
+        temp *= t
+        res += temp
+        t *= 10
+    return res
+
+
+def luogu1018():
+    n, k = read()
+    num = [[0 for i in range(n + 5)] for j in range(n + 5)]
+    dp = [[0 for i in range(n + 5)] for j in range(n + 5)]
+    s = input()
+    for i in range(len(s)):
+        for j in range(i, len(s)):
+            num[i + 1][j + 1] = getnum(s, i, j)
+    for i in range(1, n + 1):
+        dp[i][0] = num[1][i]
+    for j in range(1, k + 1):
+        for i in range(j + 1, n + 1):
+            for x in range(j, i):
+                dp[i][j] = max(dp[i][j], dp[x][j - 1] * num[x + 1][i])
+    print (dp[n][k])
+
+
+if __name__ == '__main__':
+    luogu1018()
+    """
+    dp[i][j]表示前i个数放j个乘号所得到的最大值
+    """
