@@ -1,0 +1,67 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+    ios::sync_with_stdio(false); \
+    cin.tie(0);                  \
+    cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+
+*/
+const ll mod = 1000000007;
+const int inf = 0x3f3f3f3f;
+
+int n, m;
+int w[30], v[30];
+ll f1[30005];
+ll f2[30005];
+//f1[i]表示的是花i块钱时所能得到的最优解
+//f2[i]表示的是剩余i块钱时所能得到的最优解
+int main()
+{
+    //freopen("text.txt", "r", stdin);
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i <= m; i++)
+        scanf("%d%d", &w[i], &v[i]);
+    for (int i = 1; i <= m; i++)
+    {
+        for (int j = 0; j <= n - w[i]; j++)
+            f2[j] = max(f2[j], f2[j + w[i]] + w[i] * v[i]);
+            //f[j + w[i]] + w[i] * v[i]表示的是要买第i件物品，那么它等于剩余j+w[i]钱时所能得到的最优解加上买第i件物品所能得到的解
+    }
+    for (int i = 1; i <= m; i++)
+    {
+        for (int j = n; j >= w[i]; j--)
+            f1[j] = max(f1[j], f1[j - w[i]] + w[i] * v[i]);
+            //f[j - w[i]] + w[i] * v[i]表示要买第i件物品时，那么就等于减去这个物品所要的花费，同时加上买第i件物品所能得到的值
+    }
+    if (f1[n] == f2[0])
+        printf("%lld\n", f1[n]);
+    //printf("%lld\n", f1[n]);
+    return 0;
+}
