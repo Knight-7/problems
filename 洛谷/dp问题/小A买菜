@@ -1,0 +1,67 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+    ios::sync_with_stdio(false); \
+    cin.tie(0);                  \
+    cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+  dp思路：dp[i][j]表示的是：第i个菜所用的钱为j
+  所以：当j < a[i]的时候，那么当前的钱就不足以买这个才，所以dp[i][j] = dp[i - 1][j];表示钱i-1个菜要花j块钱所有的方法数；
+        当j > a[i]的时候，有两种选择：1、不买这个菜，dp[i][j] = dp[i - 1][j]， 意思与j < a[i]的相同
+                                    2、买这个菜，那么dp[i][j] = dp[i - 1][j - a[i]]，那么它买i - 1个菜是花j - a[i]的方法数;
+        当j = a[i]的时候，也有两种选择，买和不买，不买的话情况与第一种相同，买的话方法数+1。
+*/
+const ll mod = 1000000007;
+const int INF = 0x3f3f3f3f;
+
+int n, m;
+int dp[105][10005];
+int a[105];
+
+int main()
+{
+    //freopen("text.txt", "r", stdin);
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i <= n; i++)
+        scanf("%d", &a[i]);
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = m; j >= 0; j--)
+        {
+            if (j < a[i])
+                dp[i][j] = dp[i - 1][j];
+            if (j > a[i])
+                dp[i][j] = dp[i - 1][j - a[i]] + dp[i - 1][j];
+            if (j == a[i])
+                dp[i][j] = dp[i - 1][j] + 1;
+        }
+    }
+    printf("%d\n", dp[n][m]);
+    return 0;
+}
