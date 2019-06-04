@@ -1,0 +1,85 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+    ios::sync_with_stdio(false); \
+    cin.tie(0);                  \
+    cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+  带有附件0 - 1背包问题
+  由于这题只有最多只有两个附件，所以dp的时候有四种可能：1、只有主件；2、主件和附件1；3、主件和附件2；4、主件、附件1和附件2
+*/
+const ll mod = 1000000007;
+const int INF = 0x3f3f3f3f;
+
+int n, m;
+struct node {
+    int w, v;
+    node (int ww = 0, int vv = 0){
+        w = ww;
+        v = vv;
+    }
+}no[70][70];
+ll f[32005];
+
+int main()
+{
+    //freopen("text.txt", "r", stdin);
+    int v, p, q;
+    int cnt = 0;
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i <= m; i++)
+    {
+        scanf("%d%d%d", &v, &p, &q);
+        if (!q)
+            no[i][0] = node(v, p);
+        else{
+            if (no[q][1].w == 0)
+                no[q][1] = node(v, p);
+            else
+                no[q][2] = node(v, p);
+        }
+    }
+
+    for (int i = 1; i <= m; i++)
+    {
+        for (int j = n; j >= 0; j--)
+        {
+            if (j >= no[i][0].w)
+                f[j] = max(f[j], f[j - no[i][0].w] + no[i][0].w * no[i][0].v);
+            if (no[i][1].w != 0 && j >= (no[i][0].w + no[i][1].w))
+                f[j] = max(f[j], f[j - no[i][0].w - no[i][1].w] + no[i][0].w * no[i][0].v + no[i][1].w * no[i][1].v);
+            if (no[i][2].w != 0 && j >= (no[i][0].w + no[i][2].w))
+                f[j] = max(f[j], f[j - no[i][0].w - no[i][2].w] + no[i][0].w * no[i][0].v + no[i][2].w * no[i][2].v);
+            if (no[i][1].w != 0 && no[i][2].w != 0 && j >= (no[i][0].w + no[i][1].w + no[i][2].w))
+                f[j] = max(f[j], f[j - no[i][0].w - no[i][1].w - no[i][2].w] + no[i][0].w * no[i][0].v + no[i][1].w * no[i][1].v + no[i][2].w * no[i][2].v);
+        }
+    }
+    printf("%lld\n", f[n]);
+    return 0;
+}
