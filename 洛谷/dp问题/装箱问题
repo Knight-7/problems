@@ -1,0 +1,56 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+    ios::sync_with_stdio(false); \
+    cin.tie(0);                  \
+    cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+  略加修改的0  1背包问题。这题最终问题的是箱子装载货物之后，箱子内的最小空间是多少，但其本质上还是0 - 1背包问题。
+  f[i]表示的是使用i空间所能占据的最大空间值，最终结果就是箱子的总体积v减去所能占据的最大体积。
+*/
+const ll MOD = 1000000007;
+const int INF = 0x3f3f3f3f;
+
+int n, v;
+int f[20005];
+int w[150];
+
+int main()
+{
+    //freopen("text.txt", "r", stdin);
+    scanf("%d%d", &v, &n);
+    for (int i = 1; i <= n; i++)
+        scanf("%d", &w[i]);
+    for (int i = 1; i <= n; i++)
+        for (int j = v; j >= w[i]; j--)
+            f[j] = max(f[j], f[j - w[i]] + w[i]);
+    printf("%d\n", v - f[v]);
+    return 0;
+}
+
