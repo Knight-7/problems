@@ -1,0 +1,76 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+
+using namespace std;
+#define IOS                      \
+    ios::sync_with_stdio(false); \
+    cin.tie(0);                  \
+    cout.tie(0)
+#define mt(a, b) memset(a, b, sizeof(a));
+#define pb push_back
+#define pob pop_back
+#define mid (l + r) >> 1
+#define lson rt << 1
+#define rson rt << 1 | 1
+#define fi first
+#define se second
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+
+/*
+
+*/
+const ll MOD = 1000000007;
+const int INF = 0x3f3f3f3f;
+
+int n;
+int mp[10][10];
+int dp[10][10][10][10];//把这题看成两个人走，一个人走x，y，另一人走i，j
+
+int main()
+{
+    //freopen("text.txt", "r", stdin);
+    scanf("%d", &n);
+    int x, y, v;
+    scanf("%d%d%d", &x, &y, &v);
+    while (x&&y&&v)
+    {
+        mp[x][y] = v;
+        scanf("%d%d%d", &x, &y, &v);
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= n; j++)
+        {
+            for (int x = 1; x <= n; x++)
+            {
+                int y = i + j - x;
+                if (y <= 0)
+                    break;
+                int& f = dp[i][j][x][y];
+                f = max(f, dp[i - 1][j][x - 1][y]);
+                f = max(f, dp[i - 1][j][x][y - 1]);
+                f = max(f, dp[i][j - 1][x - 1][y]);
+                f = max(f, dp[i][j - 1][x][y - 1]);
+                f += mp[i][j] + mp[x][y];
+                if (i == x && j == y)
+                    f -= mp[i][j];     //因为这个格子的数被取走了之后，改点的值变成了0
+            }
+        }
+    }
+    printf ("%d\n", dp[n][n][n][n]);
+    return 0;
+}
